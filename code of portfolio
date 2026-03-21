@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Elisetty Charan Teja — AI Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060608;
+    --surface: #0e0e14;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00ffc2;
+    --accent2: #ff3cac;
+    --accent3: #ffd700;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --card: #12121a;
+    --glow: 0 0 40px rgba(0,255,194,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(6,6,8,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .hero-orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,255,194,0.12), transparent 70%);
+    top: -100px; right: -100px;
+    animation: float1 8s ease-in-out infinite;
+  }
+  .hero-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,60,172,0.1), transparent 70%);
+    bottom: 0; left: 10%;
+    animation: float2 10s ease-in-out infinite;
+  }
+  @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,30px)} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-20px)} }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,255,194,0.08);
+    border: 1px solid rgba(0,255,194,0.2);
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 1.5s ease infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.96;
+    letter-spacing: -3px;
+    animation: fadeUp 0.8s 0.1s ease both;
+    margin-bottom: 20px;
+  }
+  .hero-name .line2 { color: var(--accent); }
+  .hero-name .line3 {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.8;
+    margin-bottom: 44px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; align-items: center;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 14px 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: all 0.2s ease;
+  }
+  .btn-primary:hover { background: var(--text); }
+
+  .btn-secondary {
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--text); }
+  .btn-secondary::after { content: '→'; }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+    animation: fadeIn 1s 1s ease both;
+  }
+  .hero-scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(var(--accent), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* SECTION COMMON */
+  section { padding: 120px 48px; position: relative; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 60px;
+  }
+
+  /* ABOUT */
+  #about { background: var(--surface); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 420px;
+  }
+  .about-frame {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+  }
+  .about-frame::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(0,255,194,0.08), transparent 60%);
+  }
+  .about-avatar-svg { width: 60%; opacity: 0.8; }
+  .about-badge {
+    position: absolute;
+    bottom: -16px; right: -16px;
+    background: var(--accent3);
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.7rem;
+    padding: 10px 16px;
+    letter-spacing: 1px;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.9;
+    font-size: 0.82rem;
+    margin-bottom: 20px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; margin-top: 40px;
+  }
+  .stat-box {
+    border: 1px solid var(--border);
+    padding: 20px;
+    background: var(--bg);
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+
+  /* SKILLS */
+  #skills {}
+  .skills-marquee-wrap { overflow: hidden; margin-bottom: 60px; }
+  .skills-marquee {
+    display: flex; gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .skills-marquee:hover { animation-play-state: paused; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .skill-chip {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid var(--border);
+    padding: 12px 24px;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .skill-chip:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,194,0.04); }
+  .skill-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .skill-item { background: var(--bg); padding: 28px 24px; transition: background 0.2s; }
+  .skill-item:hover { background: var(--card); }
+  .skill-item-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; }
+  .skill-bar { height: 2px; background: var(--border); position: relative; overflow: hidden; }
+  .skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s ease; }
+  .skill-cat { font-size: 0.6rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* PROJECTS */
+  #projects { background: var(--surface); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .project-card:hover { border-color: rgba(0,255,194,0.3); transform: translateY(-4px); }
+  .project-card:hover .project-arrow { opacity: 1; transform: translate(4px,-4px); }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card.large { grid-column: span 7; }
+  .project-card.medium { grid-column: span 5; }
+  .project-card.full { grid-column: span 12; }
+  .project-num { font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; margin-bottom: 20px; }
+  .project-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: -0.5px; }
+  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); color: var(--muted); }
+  .tag.accent { border-color: rgba(0,255,194,0.3); color: var(--accent); background: rgba(0,255,194,0.05); }
+  .project-arrow { position: absolute; top: 36px; right: 36px; font-size: 1.2rem; opacity: 0.2; transition: all 0.3s; }
+  .project-visual { height: 120px; margin-bottom: 24px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  .project-visual-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+  /* CONTACT */
+  #contact {}
+  .contact-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+  .contact-info h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; letter-spacing: -1px; margin-bottom: 16px; }
+  .contact-info p { color: var(--muted); font-size: 0.8rem; line-height: 1.8; margin-bottom: 36px; }
+  .contact-links { display: flex; flex-direction: column; gap: 16px; }
+  .contact-link { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; font-size: 0.78rem; padding: 16px; border: 1px solid var(--border); transition: all 0.2s; }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-link-icon { font-size: 1rem; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .form-group input, .form-group textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.8rem; padding: 14px 16px; outline: none; transition: border-color 0.2s; resize: vertical; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { min-height: 120px; }
+  .form-submit {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 16px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-submit::before { content: ''; position: absolute; inset: 0; background: var(--accent); transform: translateX(-100%); transition: transform 0.3s ease; z-index: 0; }
+  .form-submit:hover::before { transform: translateX(0); }
+  .form-submit span { position: relative; z-index: 1; }
+  .form-submit:hover span { color: var(--bg); }
+
+  /* CHATBOT */
+  #chatbot-section { background: var(--surface); border-top: 1px solid var(--border); }
+  .chat-container { max-width: 780px; margin: 0 auto; border: 1px solid var(--border); background: var(--card); overflow: hidden; }
+  .chat-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--bg); }
+  .chat-status { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 2s ease infinite; }
+  .chat-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+  .chat-subtitle { font-size: 0.65rem; color: var(--muted); margin-left: auto; }
+  .chat-messages { height: 380px; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); }
+  .message { max-width: 78%; animation: msgIn 0.3s ease; }
+  @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .message.user { align-self: flex-end; }
+  .message.bot { align-self: flex-start; }
+  .message-bubble { padding: 12px 16px; font-size: 0.78rem; line-height: 1.7; border: 1px solid var(--border); }
+  .message.user .message-bubble { background: rgba(0,255,194,0.08); border-color: rgba(0,255,194,0.2); color: var(--text); }
+  .message.bot .message-bubble { background: var(--surface); color: var(--text); }
+  .message-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .message.user .message-label { text-align: right; }
+  .chat-input-area { padding: 16px; border-top: 1px solid var(--border); display: flex; gap: 12px; }
+  .chat-input { flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 12px 16px; outline: none; transition: border-color 0.2s; }
+  .chat-input:focus { border-color: var(--accent); }
+  .chat-send { background: var(--accent); border: none; color: var(--bg); padding: 12px 20px; font-size: 0.9rem; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+  .chat-send:hover { background: var(--text); }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: typingDot 1.2s ease infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingDot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 0.68rem; color: var(--muted); }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text); }
+  .footer-logo span { color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .project-card.large, .project-card.medium { grid-column: span 12; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Charan<span>.dev</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#chatbot-section">AI Chat</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for work · 2026</div>
+    <h1 class="hero-name">
+      <div>Elisetty</div>
+      <div class="line2">Charan Teja</div>
+      <div class="line3">AI Engineer</div>
+    </h1>
+    <p class="hero-sub">
+      Building intelligent systems with Python, Power BI, and modern web technologies. Passionate about AI, data analytics, and full-stack development.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#chatbot-section" class="btn-secondary">Chat with my AI</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — Who I Am</div>
+  <h2 class="section-title">Building the<br>future, today.</h2>
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-frame">
+        <svg class="about-avatar-svg" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="75" r="45" stroke="rgba(0,255,194,0.5)" stroke-width="1.5" fill="rgba(0,255,194,0.05)"/>
+          <ellipse cx="100" cy="175" rx="65" ry="35" stroke="rgba(0,255,194,0.3)" stroke-width="1.5" fill="rgba(0,255,194,0.03)"/>
+          <circle cx="100" cy="75" r="25" fill="rgba(0,255,194,0.1)" stroke="rgba(0,255,194,0.4)" stroke-width="1"/>
+          <circle cx="90" cy="70" r="4" fill="rgba(0,255,194,0.6)"/>
+          <circle cx="110" cy="70" r="4" fill="rgba(0,255,194,0.6)"/>
+          <path d="M 88 85 Q 100 95 112 85" stroke="rgba(0,255,194,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M 20 100 L 55 100 L 55 75" stroke="rgba(0,255,194,0.2)" stroke-width="1" stroke-dasharray="4 4"/>
+          <path d="M 180 100 L 145 100 L 145 75" stroke="rgba(255,60,172,0.2)" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="20" cy="100" r="3" fill="rgba(0,255,194,0.4)"/>
+          <circle cx="180" cy="100" r="3" fill="rgba(255,60,172,0.4)"/>
+        </svg>
+        <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:0.65rem;letter-spacing:2px;color:rgba(0,255,194,0.5)">CHARAN_TEJA.jpg</div>
+      </div>
+      <div class="about-badge">OPEN TO WORK</div>
+    </div>
+    <div class="about-text">
+      <p>I'm Elisetty Charan Teja — a passionate developer and data enthusiast building AI-powered applications and deriving insights from data. I love crafting intelligent systems that solve real-world problems elegantly.</p>
+      <p>My expertise spans Python, Power BI, Web Development, and Database Management with MySQL. I've completed industry-recognised simulations and certifications in data analytics and generative AI.</p>
+      <p>I'm currently pursuing my degree in Computer Science, driven by curiosity about how AI and data can transform everyday experiences into something extraordinary.</p>
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="stat-num">4+</div>
+          <div class="stat-label">Projects Built</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">2</div>
+          <div class="stat-label">Certifications</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">4</div>
+          <div class="stat-label">AI Integrations</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Coffee Consumed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 — Toolbox</div>
+  <h2 class="section-title">Skills &<br>Technologies</h2>
+
+  <div class="skills-marquee-wrap" style="margin-bottom:48px">
+    <div class="skills-marquee" id="marqueeTrack"></div>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item">
+      <div class="skill-cat">Language</div>
+      <div class="skill-item-name">Python</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:88%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Data Visualisation</div>
+      <div class="skill-item-name">Power BI</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:82%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Frontend / Full Stack</div>
+      <div class="skill-item-name">Web Development</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:85%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Database</div>
+      <div class="skill-item-name">DBMS — MySQL</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:80%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Simulation / Training</div>
+      <div class="skill-item-name">Data Analytics — Deloitte</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:78%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">AI / ML</div>
+      <div class="skill-item-name">Generative AI Studio</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:75%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Backend</div>
+      <div class="skill-item-name">Node.js</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:76%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">DevOps</div>
+      <div class="skill-item-name">Git & GitHub</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:88%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">AI / API</div>
+      <div class="skill-item-name">OpenAI API</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:73%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Styling</div>
+      <div class="skill-item-name">Tailwind CSS</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:84%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Analytics</div>
+      <div class="skill-item-name">Data Analytics</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:80%"></div></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-cat">Framework</div>
+      <div class="skill-item-name">Next.js</div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:79%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 — Work</div>
+  <h2 class="section-title">Featured<br>Projects</h2>
+
+  <div class="projects-grid">
+
+    <!-- PROJECT 1 -->
+    <div class="project-card large">
+      <div class="project-arrow">↗</div>
+      <div class="project-visual">
+        <div class="project-visual-inner">
+          <svg viewBox="0 0 400 120" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+            <rect x="30" y="20" width="60" height="75" rx="5" stroke="rgba(0,255,194,0.35)" fill="rgba(0,255,194,0.04)" stroke-width="1.5"/>
+            <rect x="110" y="30" width="60" height="65" rx="5" stroke="rgba(255,60,172,0.35)" fill="rgba(255,60,172,0.04)" stroke-width="1.5"/>
+            <rect x="190" y="15" width="60" height="80" rx="5" stroke="rgba(255,215,0,0.35)" fill="rgba(255,215,0,0.04)" stroke-width="1.5"/>
+            <rect x="270" y="25" width="60" height="70" rx="5" stroke="rgba(0,255,194,0.25)" fill="rgba(0,255,194,0.03)" stroke-width="1.5"/>
+            <!-- cart icon -->
+            <path d="M 340 35 L 355 35 L 368 60 L 345 60" stroke="rgba(0,255,194,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <circle cx="349" cy="66" r="4" fill="rgba(0,255,194,0.6)"/>
+            <circle cx="363" cy="66" r="4" fill="rgba(0,255,194,0.6)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="project-num">01 / PROJECT</div>
+      <div class="project-title">E-Commerce Website</div>
+      <p class="project-desc">A fully functional e-commerce platform featuring dynamic product listings, a cart management system, user authentication, and an order tracking dashboard. Built with Next.js App Router and Tailwind CSS for a responsive, mobile-first UI. Products and orders are persisted in MongoDB. Integrated a secure payment flow and admin panel for managing inventory and orders.</p>
+      <div class="project-tags">
+        <span class="tag accent">Next.js</span>
+        <span class="tag accent">Tailwind CSS</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Stripe API</span>
+        <span class="tag">Vercel</span>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 -->
+    <div class="project-card medium">
+      <div class="project-arrow">↗</div>
+      <div class="project-visual" style="height:90px">
+        <div class="project-visual-inner">
+          <svg viewBox="0 0 200 90" style="width:90%" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="45" r="38" stroke="rgba(0,255,194,0.3)" fill="rgba(0,255,194,0.04)" stroke-width="1.5"/>
+            <circle cx="100" cy="45" r="22" stroke="rgba(255,60,172,0.3)" fill="rgba(255,60,172,0.04)" stroke-width="1"/>
+            <circle cx="100" cy="45" r="8" fill="rgba(0,255,194,0.5)"/>
+            <line x1="100" y1="7" x2="100" y2="83" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 3"/>
+            <line x1="62" y1="45" x2="138" y2="45" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 3"/>
+            <!-- fork & knife icons -->
+            <path d="M 25 20 L 25 45 M 25 55 L 25 70 M 20 20 L 30 20" stroke="rgba(0,255,194,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 175 20 L 175 70" stroke="rgba(255,60,172,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="project-num">02 / PROJECT</div>
+      <div class="project-title">AI Recipe Recommender</div>
+      <p class="project-desc">An intelligent recipe recommendation engine powered by OpenAI. Users input available ingredients, dietary preferences, and cuisine type — the AI returns personalised recipes with step-by-step instructions, nutritional info, and a shopping list. Built with Python and Next.js; chat history and user preferences saved to MongoDB.</p>
+      <div class="project-tags">
+        <span class="tag accent">Python</span>
+        <span class="tag accent">OpenAI API</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Next.js</span>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="project-card medium">
+      <div class="project-arrow">↗</div>
+      <div class="project-visual" style="height:90px">
+        <div class="project-visual-inner">
+          <svg viewBox="0 0 200 90" style="width:90%" xmlns="http://www.w3.org/2000/svg">
+            <rect x="15" y="15" width="32" height="62" rx="4" stroke="rgba(255,60,172,0.5)" fill="rgba(255,60,172,0.05)" stroke-width="1.5"/>
+            <rect x="60" y="25" width="32" height="52" rx="4" stroke="rgba(0,255,194,0.5)" fill="rgba(0,255,194,0.05)" stroke-width="1.5"/>
+            <rect x="105" y="10" width="32" height="67" rx="4" stroke="rgba(255,215,0,0.5)" fill="rgba(255,215,0,0.05)" stroke-width="1.5"/>
+            <rect x="150" y="20" width="32" height="57" rx="4" stroke="rgba(255,60,172,0.4)" fill="rgba(255,60,172,0.03)" stroke-width="1.5"/>
+            <!-- star rating -->
+            <text x="100" y="88" font-size="10" fill="rgba(255,215,0,0.7)" text-anchor="middle">★ ★ ★ ★ ★</text>
+          </svg>
+        </div>
+      </div>
+      <div class="project-num">03 / PROJECT</div>
+      <div class="project-title">AI Fashion Recommendation</div>
+      <p class="project-desc">An AI-based fashion recommendation system that analyses user style preferences, body type, and occasion to suggest personalised outfit combinations. Powered by OpenAI for intelligent styling logic, with Power BI dashboards for fashion trend analytics. User profiles and interaction history stored in MySQL.</p>
+      <div class="project-tags">
+        <span class="tag accent">Python</span>
+        <span class="tag accent">OpenAI</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Web Dev</span>
+      </div>
+    </div>
+
+    <!-- PROJECT 4 -->
+    <div class="project-card large">
+      <div class="project-arrow">↗</div>
+      <div class="project-visual">
+        <div class="project-visual-inner">
+          <svg viewBox="0 0 400 120" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 40 85 Q 100 25 200 60 Q 300 95 360 35" stroke="rgba(0,255,194,0.45)" stroke-width="1.8" fill="none" stroke-dasharray="7 3"/>
+            <path d="M 40 65 Q 120 105 220 40 Q 300 5 360 75" stroke="rgba(255,60,172,0.4)" stroke-width="1.8" fill="none" stroke-dasharray="7 3"/>
+            <circle cx="40" cy="85" r="6" fill="rgba(0,255,194,0.8)"/>
+            <circle cx="360" cy="35" r="6" fill="rgba(0,255,194,0.8)"/>
+            <circle cx="40" cy="65" r="6" fill="rgba(255,60,172,0.8)"/>
+            <circle cx="360" cy="75" r="6" fill="rgba(255,60,172,0.8)"/>
+            <rect x="155" y="22" width="55" height="22" rx="3" stroke="rgba(255,215,0,0.5)" fill="rgba(255,215,0,0.07)" stroke-width="1"/>
+            <text x="182" y="37" font-size="9" fill="rgba(255,215,0,0.9)" text-anchor="middle" font-family="monospace">₹3,499</text>
+            <rect x="225" y="68" width="55" height="22" rx="3" stroke="rgba(0,255,194,0.5)" fill="rgba(0,255,194,0.07)" stroke-width="1"/>
+            <text x="252" y="83" font-size="9" fill="rgba(0,255,194,0.9)" text-anchor="middle" font-family="monospace">₹4,199</text>
+          </svg>
+        </div>
+      </div>
+      <div class="project-num">04 / PROJECT</div>
+      <div class="project-title">Smart Airline Comparison System</div>
+      <p class="project-desc">A smart airline search and comparison platform that aggregates live flight data across multiple airlines. Helps users find the best deals based on price, duration, layovers, and ratings. Includes AI-assisted travel tips, historical price trend charts visualised via Power BI, and route/booking data stored in MySQL. The Node.js backend exposes REST APIs for real-time data fetching and comparison logic; Data Analytics techniques identify fare patterns and peak-season pricing.</p>
+      <div class="project-tags">
+        <span class="tag accent">Node.js</span>
+        <span class="tag accent">Python</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">REST API</span>
+        <span class="tag">Next.js</span>
+        <span class="tag">Data Analytics</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">04 — Get in Touch</div>
+  <h2 class="section-title">Let's Build<br>Something.</h2>
+
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h3>Open to<br>opportunities.</h3>
+      <p>Whether you have a project idea, want to collaborate, or just want to say hello — my inbox is always open.</p>
+      <div class="contact-links">
+        <a href="/cdn-cgi/l/email-protection#25464d4457444b51404f4410121610654248444c490b464a48" class="contact-link">
+          <span class="charanteja5735@gmail.com">✉</span>
+          <span class="__cf_email__" data-cfemail="37545f5645565943525d560200040277505a565e5b1954585a">[email&#160;protected]</span>
+        </a>
+        <a href="https://github.com/Charanteja5735" target="_blank" class="contact-link">
+          <span class="contact-link-icon">⌥</span>
+          github.com/Charanteja5735
+        </a>
+        <a href="https://www.linkedin.com/in/elisetty-charan-teja-a62652348" target="_blank" class="contact-link">
+          <span class="contact-link-icon">◈</span>
+          linkedin.com/in/elisetty-charan-teja
+        </a>
+      </div>
+    </div>
+
+    <form id="contactForm" onsubmit="handleFormSubmit(event)">
+      <input type="hidden" name="access_key" value="6c3b5f6e-bdee-4471-859e-c026588e302b"/>
+      <input type="hidden" name="subject" value="New Portfolio Message from Contact Form"/>
+      <input type="hidden" name="from_name" value="Portfolio Contact Form"/>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="John Doe" id="cName" required/>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="john@example.com" id="cEmail" required/>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" placeholder="Tell me about your project..." id="cMsg" required></textarea>
+      </div>
+      <button type="submit" class="form-submit"><span id="formBtnText">Send Message →</span></button>
+    </form>
+  </div>
+</section>
+
+<!-- AI CHATBOT -->
+<section id="chatbot-section">
+  <div class="section-label">05 — AI Assistant</div>
+  <h2 class="section-title" style="text-align:center;margin-bottom:48px">Chat with<br><span style="color:var(--accent)">My AI</span></h2>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="chat-status"></div>
+      <div class="chat-title">Charan Teja's AI Assistant</div>
+      <div class="chat-subtitle">Powered by OpenAI · Messages saved to DB</div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="message-label">AI Assistant</div>
+        <div class="message-bubble">
+          Hey there! 👋 I'm Charan Teja's AI assistant. Ask me anything about his skills, projects, or experience — I'm here to help!
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chatInput" placeholder="Ask me anything about Charan Teja..." onkeydown="if(event.key==='Enter') sendMessage()"/>
+      <button class="chat-send" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Charan<span>.dev</span></div>
+  <div>Designed & built with Next.js + Tailwind + MySQL</div>
+  <div>© 2026 · All rights reserved</div>
+</footer>
+
+<script>
+// ─── MARQUEE BUILD ───────────────────────────────
+const chips = ['Python','Power BI','Web Development','MySQL','Node.js','OpenAI API','Git & GitHub','Data Analytics','Next.js','Tailwind CSS','Generative AI Studio','REST APIs','Deloitte Simulation','DBMS','Vercel'];
+const track = document.getElementById('marqueeTrack');
+const buildChips = (arr) => arr.map(s => `<span class="skill-chip"><span class="dot"></span>${s}</span>`).join('');
+track.innerHTML = buildChips(chips) + buildChips(chips);
+
+// ─── CONTACT FORM (Web3Forms) ────────────────────
+async function handleFormSubmit(e) {
+  e.preventDefault();
+
+  const btn     = document.getElementById('formBtnText');
+  const name    = document.getElementById('cName').value.trim();
+  const email   = document.getElementById('cEmail').value.trim();
+  const message = document.getElementById('cMsg').value.trim();
+
+  if (!name || !email || !message) {
+    btn.textContent = '⚠️ Please fill all fields';
+    setTimeout(() => { btn.textContent = 'Send Message →'; }, 2000);
+    return;
+  }
+
+  btn.textContent = 'Sending...';
+
+  const formData = {
+    access_key: document.querySelector('input[name="access_key"]').value,
+    subject:    "New Portfolio Message from " + name,
+    from_name:  "Portfolio Contact Form",
+    name:       name,
+    email:      email,
+    message:    message
+  };
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      btn.textContent = '✅ Message Sent!';
+      document.getElementById('cName').value  = '';
+      document.getElementById('cEmail').value = '';
+      document.getElementById('cMsg').value   = '';
+      setTimeout(() => { btn.textContent = 'Send Message →'; }, 3000);
+    } else {
+      btn.textContent = '❌ Failed: ' + (result.message || 'Try again');
+      setTimeout(() => { btn.textContent = 'Send Message →'; }, 3000);
+    }
+  } catch (err) {
+    btn.textContent = '❌ Network Error. Try again.';
+    setTimeout(() => { btn.textContent = 'Send Message →'; }, 3000);
+  }
+}
+
+// ─── AI CHATBOT ──────────────────────────────────
+const OPENAI_API_KEY = "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";
+
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+
+const SYSTEM_PROMPT = `You are a helpful AI assistant on Elisetty Charan Teja's personal portfolio website.
+Answer all questions about Charan Teja based on the info below. Be friendly, concise, and professional.
+
+NAME: Elisetty Charan Teja
+EMAIL: charanteja5735@gmail.com
+GITHUB: https://github.com/Charanteja5735
+LINKEDIN: https://www.linkedin.com/in/elisetty-charan-teja-a62652348
+
+SKILLS: Python, Power BI, Web Development, DBMS with MySQL, Node.js, Git & GitHub, OpenAI API, Tailwind CSS, Next.js, Data Analytics, Generative AI Studio
+
+CERTIFICATIONS:
+- Data Analytics Job Simulation at Deloitte
+- Introduction to Generative AI Studio
+
+PROJECTS:
+1. E-Commerce Website — Next.js, Tailwind CSS, MongoDB, Node.js, Stripe API, Vercel
+2. AI Recipe Recommender — Python, OpenAI API, Node.js, MongoDB, Next.js
+3. AI Fashion Recommendation System — Python, OpenAI, Power BI, MySQL, Web Development
+4. Smart Airline Comparison System — Node.js, Python, MySQL, Power BI, REST APIs, Data Analytics
+
+AVAILABILITY: Open to work — internships, freelance, or full-time roles in AI, data analytics, or web development.
+
+If asked anything unrelated to Charan Teja or his portfolio, politely say you can only answer questions about him.`;
+
+const conversationHistory = [];
+
+async function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  appendMessage(msg, 'user');
+  chatInput.value = '';
+  appendTyping();
+
+  conversationHistory.push({ role: "user", content: msg });
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        max_tokens: 300,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...conversationHistory
+        ]
+      })
+    });
+
+    const data = await response.json();
+    const typing = document.getElementById('typingMsg');
+    if (typing) typing.remove();
+
+    if (data.choices && data.choices[0]) {
+      const reply = data.choices[0].message.content.trim();
+      conversationHistory.push({ role: "assistant", content: reply });
+      appendMessage(reply, 'bot');
+    } else {
+      const errMsg = data.error?.message || "Something went wrong. Please try again.";
+      appendMessage("⚠️ " + errMsg, 'bot');
+      conversationHistory.pop();
+    }
+
+  } catch (err) {
+    const typing = document.getElementById('typingMsg');
+    if (typing) typing.remove();
+    appendMessage("⚠️ Network error. Please check your connection and try again.", 'bot');
+    conversationHistory.pop();
+  }
+}
+
+function appendMessage(text, type) {
+  const wrap = document.createElement('div');
+  wrap.className = `message ${type}`;
+  wrap.innerHTML = `<div class="message-label">${type === 'user' ? 'You' : 'AI Assistant'}</div>
+    <div class="message-bubble">${text}</div>`;
+  chatMessages.appendChild(wrap);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function appendTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'message bot';
+  wrap.id = 'typingMsg';
+  wrap.innerHTML = `<div class="message-label">AI Assistant</div>
+    <div class="message-bubble"><div class="typing-indicator">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div></div>`;
+  chatMessages.appendChild(wrap);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// ─── SCROLL ANIMATIONS ───────────────────────────
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.query
