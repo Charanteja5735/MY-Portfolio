@@ -12,7 +12,7 @@
 
 ## 🌐 Live Demo
 
-🔗 **[View Live Portfolio](#)** ← *(paste your Vercel link here)*
+🔗 **[[View Live Portfolio]](https://charan-teja1-portfolio.netlify.app/)(#)** ← live link
 
 ---
 
