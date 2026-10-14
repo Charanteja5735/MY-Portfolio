@@ -12,7 +12,7 @@
 
 ## 🌐 Live Demo
 
-🔗 **[[View Live Portfolio]](https://charan-teja1-portfolio.netlify.app/)(#)** ← live link
+🔗 **[[View Live Portfolio]](https://cherrys-portfolio.netlify.app/)(#)** ← live link
 
 ---
 
